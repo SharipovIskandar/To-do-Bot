@@ -3,15 +3,14 @@
 declare(strict_types=1);
 
 use GuzzleHttp\Client;
-use src\Task;
 use src\User;
 
 class Bot
 {
-    const string TOKEN = "6985551569:AAF1KLAE2EuPhi3MgI1d9_ef2uB48uXMNnQ";
+    const string TOKEN = "7089762743:AAHY_zBmW3Upi4qS7-9jUBgNqTuHKtVsmhg";
     const string API   = "https://api.telegram.org/bot".self::TOKEN."/";
     public Client $http;
-    private PDO   $pdo;
+    private PDO $pdo;
 
     public function __construct()
     {
@@ -52,7 +51,7 @@ class Bot
         $this->http->post('sendMessage', [
             'form_params' => [
                 'chat_id' => $chatId,
-                'text'         => "Please, chouse your task:\n\n" . $this->prepareTexts($tasks),
+                'text'         => "Please, choose your task:\n\n" . $this->prepareTexts($tasks),
                 'reply_markup' => $this->prepareButtons($tasks)
             ]
         ]);
@@ -180,4 +179,3 @@ class Bot
         $this->getAllTasks($chatId);
     }
 }
-

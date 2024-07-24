@@ -9,10 +9,22 @@ class User {
     {
         $this->pdo  = DB::connect();
     }
+
+    public function save_user(int $chat_id)
+    {
+        $check = $this->pdo->prepare("SELECT * FROM `users` WHERE `chat_id` = :chat_id");
+        $check->bindParam(':chat_id', $chat_id);
+        $check->execute();
+        $check = $check->fetch();
+        if (!($check)) {
+            $query = "INSERT INTO `users` (`chat_id`, `created_at`) VALUES (:chat_id, NOW())";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(':chat_id', $chat_id);
+            $stmt->execute();
+        }
+    }
     public function  setStatus(int $chatId, $status='add') {
-        $query  = "INSERT INTO users (chat_id, status, created_at)
-                  VALUES (:chat_id, :status, NOW())
-                  ON DUPLICATE KEY UPDATE status = :status, created_at = NOW()";
+        $query  = "UPDATE `users` SET `status` = :status WHERE `chat_id` = :chat_id";
         $stmt   = $this->pdo->prepare($query);
         $stmt->bindParam(':chat_id', $chatId);
         $stmt->bindParam(':status', $status);

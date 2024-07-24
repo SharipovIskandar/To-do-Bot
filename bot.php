@@ -1,15 +1,16 @@
 <?php
 
 declare(strict_types=1);
-
+use src\User;
 $bot = new Bot();
-
 if (isset($update->message)) {
     $message = $update->message;
     $chatId  = $message->chat->id;
     $text    = $message->text;
 
     if ($text === "/start") {
+        $user = new User();
+        $user-> save_user($chatId);
         $bot->handleStartCommand($chatId);
         return;
     }
@@ -29,18 +30,16 @@ if (isset($update->message)) {
 
 if (isset($update->callback_query)) {
     $callbackQuery = $update->callback_query;
-    $callbackData  = $callbackQuery->data;
+    $callbackData  = (int) $callbackQuery->data;
     $chatId        = $callbackQuery->message->chat->id;
     $messageId     = $callbackQuery->message->message_id;
-    $user = new \src\User();
-    if ($callbackData == 'delete_task'){
-        $bot->handleDeleteCommand($chatId);
-        return;
-    }
-    if ($user->getUserInfo($chatId)->status == 'delete'){
-        $bot->handleDeleteTask($chatId, (int)$callbackData);
-        $user->setStatus($chatId, '');
-        return;
-    }
-    $bot->handleInlineButton($chatId, (int)$callbackData);
+//    if ($callbackData == 'delete'){
+//
+//    }
+//    $user = new User();
+//    if ($user->getUserInfo()->status == 'delete'){
+//
+//    }
+    $bot->handleInlineButton($chatId, $callbackData);
 }
+
